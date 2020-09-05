@@ -1,0 +1,87 @@
+{
+    "info": {
+        "_postman_id": "03feeb3d-df15-4232-bbc2-ca30d9149bd1",
+        "name": "serverless",
+        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "add user",
+            "_postman_id": "5111c892-7d79-4cf9-9e25-59ef99d3b4a5",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"fullName\":\"yogi\",\r\n    \"email\":\"yogeshnishad@gmail.com\"\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": "https://l82vl7h64j.execute-api.ap-south-1.amazonaws.com/dev/user"
+            },
+            "response": []
+        },
+        {
+            "name": "get  all user",
+            "_postman_id": "23c55cc4-4a48-4a58-97d1-6668927edd5a",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://l82vl7h64j.execute-api.ap-south-1.amazonaws.com/dev/user"
+            },
+            "response": []
+        },
+        {
+            "name": "update user",
+            "_postman_id": "561947a5-2c05-4abc-b18f-1d5eba9486a4",
+            "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"fullName\": \"yogesh\",\r\n    \"email\":\"nishadyogesh94@gmail.com\"\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": "https://l82vl7h64j.execute-api.ap-south-1.amazonaws.com/dev/user/1599236999526"
+            },
+            "response": []
+        },
+        {
+            "name": "delete user",
+            "_postman_id": "173feb57-ae77-4076-94b3-3da64baa675d",
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"name\": \"yogesh\",\r\n    \"email\":\"nishadyogesh94@gmail.com\"\r\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": "https://l82vl7h64j.execute-api.ap-south-1.amazonaws.com/dev/user/1599236999526"
+            },
+            "response": []
+        },
+        {
+            "name": "get  user",
+            "_postman_id": "282be3b3-2127-4cdb-b0d8-30e85689564c",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://l82vl7h64j.execute-api.ap-south-1.amazonaws.com/dev/user/1599241750706"
+            },
+            "response": []
+        }
+    ],
+    "protocolProfileBehavior": {}
+}
