@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SERVERLESS DYNAMO CRUD</title>
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            /* width: 100%; */
+            height: 100%;
+            background-color: #bdc3c7;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .wrapper {
+            padding-top: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .border {
+            margin-left: 25px;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        input {
+            padding: 10px;
+            color: #212121;
+            border: 1px solid #d2d2d2;
+            border-radius: 2px 2px 2px 2px;
+        }
+
+        button {
+            padding: 10px;
+            border: 0 none;
+            border-radius: 2px 2px 2px 2px;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        button#add {
+            background-color: #46b98a;
+        }
+
+        button#add:hover {
+            background-color: #3fa67c;
+        }
+
+        button#removeAll {
+            background-color: #E0645C;
+        }
+
+        button#removeAll:hover {
+            background-color: #c95a52;
+        }
+
+        button.removeMe {
+            padding: 5px;
+            font-size: 13px;
+            margin-left: 10px;
+            font-weight: 700;
+        }
+
+        button.removeMe:hover {
+            background-color: #46b98a;
+        }
+
+        ul#list {
+            margin: 0;
+            padding: 20px 0 0 0;
+        }
+
+        li {
+            list-style: none;
+            font-size: 12px;
+            padding: 4px;
+        }
+
+        .title {
+            color: lime;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="border">
+            <h1><span class="title">SERVERLESS DYNAMO </span>CRUD</h1>
+            <input type="email" id="email" placeholder="Enter Email" required>
+            <input type="text" id="fullName" placeholder="Enter Name" required>
+            <button id="add">Add</button>
+            <button id="removeAll">Reset Form</button>
+            <ul id="list"></ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        const BASE_URL = 'https://l82vl7h64j.execute-api.ap-south-1.amazonaws.com/dev';
+        const ul = document.getElementById('list');
+        const resetForm = document.getElementById('removeAll');
+        const add = document.getElementById('add');
+        let currentId = null
+
+        add.onclick = () => {
+            addLi();
+        };
+
+        function addLi() {
+
+            const inputEmail = document.getElementById('email').value
+            const inputFullName = document.getElementById('fullName').value;
+
+            if (!inputEmail) return alert("Email is required")
+            if (!inputFullName) return alert("Full name is required")
+            fetch(`${BASE_URL}/user/${currentId ? currentId.id : ""}`, { method: currentId ? 'PUT' : 'POST', body: JSON.stringify({ email: inputEmail, fullName: inputFullName }) }).then(resp => resp.json()).then(resp => {
+                currentId = null;
+                document.getElementById('add').innerHTML = "ADD"
+                document.getElementById('email').value = '';
+                document.getElementById('fullName').value = '';
+                // renderList(resp.data.user)
+                getUser();
+            }).catch(err => {
+                alert(err)
+            })
+
+        }
+        function getUser() {
+            fetch(`${BASE_URL}/user`).then(resp => resp.json()).then(resp => {
+                ul.innerHTML = ""
+                resp.data.Items.forEach(ele => renderList(ele))
+            }).catch(err => {
+                alert(err)
+            })
+        }
+
+        getUser();
+
+        function renderList(user) {
+
+            const removeButton = document.createElement('button');
+            const editButton = document.createElement('button');
+            removeButton.className = 'removeMe';
+            removeButton.innerHTML = 'REMOVE';
+            removeButton.setAttribute('onclick', `remove(this, ${JSON.stringify(user)});`);
+
+            editButton.className = 'removeMe';
+            editButton.innerHTML = 'EDIT';
+            editButton.setAttribute('onclick', `edit(this, ${JSON.stringify(user)});`);
+
+            const li = document.createElement('li');
+            const textNode = document.createTextNode(`Email : ${user.email}, Name : ${user.fullName} `)
+            li.appendChild(textNode);
+            li.appendChild(editButton);
+            li.appendChild(removeButton);
+            ul.appendChild(li);
+        }
+
+
+        function remove(item, data) {
+
+            currentId = null
+            document.getElementById('add').innerHTML = "ADD"
+            document.getElementById('email').value = "";
+            document.getElementById('fullName').value = "";
+
+            fetch(`${BASE_URL}/user/${data.id}`, {
+                method: 'DELETE',
+                // mode: 'no-cors',
+                // body: JSON.stringify({}),
+                // headers: { 'Content-Type': 'application/json' }
+            }).then(resp => {
+                debugger
+                return resp.json()
+            }).then(resp => {
+                debugger
+
+                getUser();
+            }).catch(err => {
+                alert(err)
+            })
+            // var parent = item.parentElement;
+            // parent.parentElement.removeChild(parent);
+        }
+
+        function edit(item, data) {
+            currentId = data
+            document.getElementById('add').innerHTML = "Update";
+            document.getElementById('email').value = data.email;
+            document.getElementById('fullName').value = data.fullName;
+        }
+
+
+        resetForm.onclick = function () {
+            currentId = null
+            document.getElementById('add').innerHTML = "ADD"
+            document.getElementById('email').value = "";
+            document.getElementById('fullName').value = "";
+        };
+    </script>
+</body>
+
+</html>
